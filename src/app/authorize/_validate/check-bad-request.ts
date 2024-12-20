@@ -27,11 +27,13 @@ export const isBadRequestQuery = (query: RequiredAuthorizeQuery & OptionalAuthor
         return true;
     }
 
+    console.log(query.client_id)
     const client = getClientById(query.client_id)
     if (!client) {
         return true;
     }
 
+    console.log(query.redirect_uri)
     if (query.redirect_uri && !client.isAllowUrl(query.redirect_uri)) {
         return true;
     }
