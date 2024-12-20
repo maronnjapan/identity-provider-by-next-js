@@ -20,6 +20,7 @@ const requiredQueryNames: Permutation<keyof RequiredAuthorizeQuery> = ['client_i
 
 export const isBadRequestQuery = (query: RequiredAuthorizeQuery & OptionalAuthorizeQuery) => {
     const isExistRequiredQueries = requiredQueryNames.every(name => !!query[name]);
+    console.log(isExistRequiredQueries)
     if (!isExistRequiredQueries) {
         return true;
     }
