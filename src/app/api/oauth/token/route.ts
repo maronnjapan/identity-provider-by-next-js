@@ -4,7 +4,7 @@ import { getState } from "@/lib/services/state.service";
 import { deleteCode, generateIdToken, IdTokenPayload, validCode } from "@/lib/services/token.service";
 import { NextRequest, NextResponse } from "next/server";
 
-export default async function POST(request: NextRequest) {
+export async function POST(request: NextRequest) {
     const { code, state, code_verifier } = await request.json() as { code: string, state: string, code_verifier: string }
 
     if (!code || !state || !code_verifier) {
