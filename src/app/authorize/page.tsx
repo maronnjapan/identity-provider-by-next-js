@@ -1,13 +1,14 @@
 import { getClientById } from "@/lib/services/client.service";
 import { isBadRequestQuery, OptionalAuthorizeQuery, RequiredAuthorizeQuery } from "./_validate/check-bad-request";
 import { redirect } from "next/navigation";
-import { randomBytes, randomUUID } from "crypto";
+import { createHash, randomBytes, randomUUID } from "crypto";
 import { storeAuth } from "@/lib/services/auth.service";
+import { storePkce } from "@/lib/services/pcke.service";
 
 
 
 export default async function Page({ params }: { params: Promise<RequiredAuthorizeQuery & OptionalAuthorizeQuery> }) {
-    const { client_id, response_type, redirect_uri, scope, state, nonce, code_verifier, audience } = await params
+    const { client_id, response_type, redirect_uri, scope, state, nonce, code_challenge, code_challenge_method, audience } = await params
     const client = getClientById(client_id);
 
     if (!client) {
@@ -15,7 +16,7 @@ export default async function Page({ params }: { params: Promise<RequiredAuthori
             <p>不正なURLです</p>
         </div>
     }
-    if (!isBadRequestQuery({ client_id, response_type, redirect_uri, scope, state, nonce, audience, code_verifier })) {
+    if (!isBadRequestQuery({ client_id, response_type, redirect_uri, scope, state, nonce, audience, code_challenge, code_challenge_method })) {
         return <div>
             <p>不正なURLです</p>
         </div>
@@ -23,7 +24,13 @@ export default async function Page({ params }: { params: Promise<RequiredAuthori
 
     const code = randomUUID()
     const redirectUrlQuery = new URLSearchParams({ state, code }).toString()
-    storeAuth(state + (code_verifier ?? ''), { clientId: client.clientId, nonce })
+    const codeChallengeObj = code_challenge && code_challenge_method ? { code_challenge, code_challenge_method } : undefined
+    if (codeChallengeObj) {
+        const hash = createHash('sha256')
+        hash.update(codeChallengeObj.code_challenge)
+        storePkce(codeChallengeObj.code_challenge_method === 'S256' ? hash.digest('base64') : codeChallengeObj.code_challenge)
+    }
+    storeAuth(state + (code_challenge ?? ''), { clientId: client.clientId, nonce, codeChallengeObj })
     return redirect(redirect_uri ?? client.allowRedirectUrls[0] + `?${redirectUrlQuery}`)
 
 }

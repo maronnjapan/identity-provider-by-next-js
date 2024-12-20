@@ -12,7 +12,8 @@ export type OptionalAuthorizeQuery = {
     audience?: string;
     redirect_uri?: string;
     nonce?: string;
-    code_verifier?: string;
+    code_challenge?: string;
+    code_challenge_method?: 'S256' | 'plain';
 }
 
 const requiredQueryNames: Permutation<keyof RequiredAuthorizeQuery> = ['client_id', 'response_type', 'state']
@@ -34,6 +35,7 @@ export const isBadRequestQuery = (query: RequiredAuthorizeQuery & OptionalAuthor
     if (query.redirect_uri && !client.isAllowUrl(query.redirect_uri)) {
         return true;
     }
+
 
     return false
 }

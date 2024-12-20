@@ -10,6 +10,10 @@ export async function POST(request: NextRequest) {
     if (!code || !state || !code_verifier) {
         return NextResponse.json({ message: 'Bad Request' }, { status: 400 })
     }
+    const auth = getAuth(state + code_verifier)
+    if (!auth) {
+        return NextResponse.json({ message: 'Bad Request' }, { status: 400 })
+    }
 
     const isValidState = !!getState(state)
     const isValidCodeVerifier = validateChallenge(code_verifier);
@@ -18,10 +22,7 @@ export async function POST(request: NextRequest) {
         return NextResponse.json({ message: 'Bad Request' }, { status: 400 })
     }
 
-    const auth = getAuth(state + code_verifier)
-    if (!auth) {
-        return NextResponse.json({ message: 'Bad Request' }, { status: 400 })
-    }
+
 
     deleteCode(code)
 
