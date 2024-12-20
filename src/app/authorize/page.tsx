@@ -6,27 +6,25 @@ import { storeAuth } from "@/lib/services/auth.service";
 
 
 
-export default function Page({ searchParams }: { searchParams: RequiredAuthorizeQuery & OptionalAuthorizeQuery }) {
-    const client = getClientById(searchParams.client_id);
+export default async function Page({ params }: { params: Promise<RequiredAuthorizeQuery & OptionalAuthorizeQuery> }) {
+    const { client_id, response_type, redirect_uri, scope, state, nonce, code_verifier, audience } = await params
+    const client = getClientById(client_id);
 
     if (!client) {
         return <div>
             <p>不正なURLです</p>
         </div>
     }
-    if (!isBadRequestQuery(searchParams)) {
+    if (!isBadRequestQuery({ client_id, response_type, redirect_uri, scope, state, nonce, audience, code_verifier })) {
         return <div>
             <p>不正なURLです</p>
         </div>
     }
 
-    const state = searchParams.state ?? ''
-    const codeVerifier = searchParams.code_verifier ?? ''
-    const nonce = searchParams.nonce ?? ''
     const code = randomUUID()
     const redirectUrlQuery = new URLSearchParams({ state, code }).toString()
-    storeAuth(state + codeVerifier, { clientId: client.clientId, nonce })
-    return redirect(searchParams.redirect_uri ?? client.allowRedirectUrls[0] + `?${redirectUrlQuery}`)
+    storeAuth(state + (code_verifier ?? ''), { clientId: client.clientId, nonce })
+    return redirect(redirect_uri ?? client.allowRedirectUrls[0] + `?${redirectUrlQuery}`)
 
 }
 

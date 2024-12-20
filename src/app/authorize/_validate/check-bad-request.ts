@@ -4,7 +4,7 @@ import { Permutation } from "@/utils/util-type";
 export type RequiredAuthorizeQuery = {
     client_id: string;
     response_type: 'code';
-
+    state: string
 }
 
 export type OptionalAuthorizeQuery = {
@@ -13,10 +13,9 @@ export type OptionalAuthorizeQuery = {
     redirect_uri?: string;
     nonce?: string;
     code_verifier?: string;
-    state?: string;
 }
 
-const requiredQueryNames: Permutation<keyof RequiredAuthorizeQuery> = ['client_id', 'response_type']
+const requiredQueryNames: Permutation<keyof RequiredAuthorizeQuery> = ['client_id', 'response_type', 'state']
 
 export const isBadRequestQuery = (query: RequiredAuthorizeQuery & OptionalAuthorizeQuery) => {
     const isExistRequiredQueries = requiredQueryNames.every(name => !!query[name]);

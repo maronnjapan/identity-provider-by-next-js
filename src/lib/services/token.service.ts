@@ -29,7 +29,7 @@ export type IdTokenPayload = {
     exp: number,
     aud: string,
     auth_time: number,
-    nonce: string
+    nonce?: string
 }
 type IdTokenHeader = {
     alg: 'RS256',

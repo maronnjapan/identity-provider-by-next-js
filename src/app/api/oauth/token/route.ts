@@ -27,6 +27,8 @@ export async function POST(request: NextRequest) {
 
     const apiUrl = new URL(request.url)
 
+    const nonceObj = auth.nonce ? { nonce: auth.nonce } : {}
+
     const idTokenPayload: IdTokenPayload = {
         iss: apiUrl.origin,
         sub: '1234567890',
@@ -35,8 +37,8 @@ export async function POST(request: NextRequest) {
         iat: Date.now(),
         exp: Date.now() + 3600,
         aud: auth.clientId,
-        nonce: auth.nonce,
-        auth_time: Date.now()
+        auth_time: Date.now(),
+        ...nonceObj
     }
     return NextResponse.json({ access_token: 'opaque', expires_in: 3600, id_token: generateIdToken(idTokenPayload) }, { status: 200 })
 }
