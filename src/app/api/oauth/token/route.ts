@@ -3,6 +3,7 @@ import { getClientById } from "@/lib/services/client.service";
 import { validateChallenge } from "@/lib/services/pcke.service";
 import { getState } from "@/lib/services/state.service";
 import { deleteCode, generateIdToken, IdTokenPayload, validCode } from "@/lib/services/token.service";
+import { createHash } from "crypto";
 import { NextRequest, NextResponse } from "next/server";
 
 
@@ -12,13 +13,13 @@ export async function POST(request: NextRequest) {
     const bodyList = bodyText.split('&').map(item => item.split(/=(.+)/, 2))
     console.log(bodyList)
 
-    const body = bodyList.reduce<{ code: string, code_verifier: string, client_id: string, grant_type: 'authorization_code', redirect_uri?: string }>((acc, [key, value]) => {
+    const body = bodyList.reduce<{ code: string, code_verifier?: string, client_id: string, grant_type: 'authorization_code', redirect_uri?: string }>((acc, [key, value]) => {
         return { ...acc, [key]: value }
-    }, { code: '', code_verifier: '', client_id: '', grant_type: 'authorization_code', redirect_uri: '' })
+    }, { code: '', code_verifier: undefined, client_id: '', grant_type: 'authorization_code', redirect_uri: undefined })
 
     const { code, code_verifier, client_id, grant_type, redirect_uri } = body
     console.log(body)
-    if (!code || !code_verifier) {
+    if (!code) {
         return NextResponse.json({ message: 'Bad Request ' }, { status: 400 })
     }
 
@@ -33,7 +34,12 @@ export async function POST(request: NextRequest) {
         return NextResponse.json({ message: 'Bad Request  ' }, { status: 400 })
     }
 
-    const isValidCodeVerifier = await validateChallenge(code_verifier);
+
+    const hash = createHash('sha256')
+    if (code_verifier) {
+        hash.update(code_verifier)
+    }
+    const isValidCodeVerifier = code_verifier ? await validateChallenge(hash.digest('base64')) : true;
     const isValidCode = await validCode(code)
 
     const isValidClientId = client_id === auth.clientId

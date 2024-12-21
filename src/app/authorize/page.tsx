@@ -32,16 +32,11 @@ export default async function Page({ searchParams }: { searchParams: Promise<Req
     const redirectUrl = redirect_uri ?? client.allowRedirectUrls[0]
     const codeChallengeObj = code_challenge && code_challenge_method ? { code_challenge, code_challenge_method } : undefined
 
-    let codeVerifier = ''
     if (codeChallengeObj) {
-        const hash = createHash('sha256')
-        hash.update(codeChallengeObj.code_challenge)
-        codeVerifier = codeChallengeObj.code_challenge_method === 'S256' ? hash.digest('base64') : codeChallengeObj.code_challenge
-        storePkce(codeVerifier)
+        storePkce(codeChallengeObj.code_challenge)
     }
-    console.log(codeVerifier)
-    console.log(code + client.clientId + codeVerifier)
-    await storeAuth(code + client.clientId + codeVerifier, { clientId: client.clientId, nonce, codeChallengeObj })
+    console.log(code + client.clientId)
+    await storeAuth(code + client.clientId, { clientId: client.clientId, nonce, codeChallengeObj })
 
     return redirect(redirectUrl + `?${redirectUrlQuery}`)
 
