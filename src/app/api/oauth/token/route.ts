@@ -18,7 +18,8 @@ export async function POST(request: NextRequest) {
     if (!code || !code_verifier) {
         return NextResponse.json({ message: 'Bad Request ' }, { status: 400 })
     }
-    const auth = getAuth(code_verifier)
+    const auth = getAuth(code + code_verifier)
+    console.log(auth)
     const client = getClientById(client_id)
     if (!auth || !client) {
         return NextResponse.json({ message: 'Bad Request  ' }, { status: 400 })
@@ -30,6 +31,7 @@ export async function POST(request: NextRequest) {
     const isValidClientId = client_id === auth.clientId
     const isValidGrantType = grant_type === 'authorization_code'
     const isValidRedirectUri = redirect_uri ? client.isAllowUrl(redirect_uri) : true
+
     if (!isValidCodeVerifier || !isValidCode || !isValidClientId || !isValidGrantType || !isValidRedirectUri) {
         return NextResponse.json({ message: 'Bad Request   ' }, { status: 400 })
     }
@@ -54,6 +56,5 @@ export async function POST(request: NextRequest) {
         ...nonceObj
     }
 
-    console.log({ access_token: 'opaque', expires_in: 3600, id_token: generateIdToken(idTokenPayload) })
     return NextResponse.json({ access_token: 'opaque', expires_in: 3600, id_token: generateIdToken(idTokenPayload) }, { status: 200 })
 }
