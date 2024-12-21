@@ -1,4 +1,4 @@
-import { Redis } from "@upstash/redis";
+import { Redis, SetCommandOptions } from "@upstash/redis";
 
 const redis = new Redis({
     url: process.env.KV_REST_API_URL,
@@ -6,9 +6,9 @@ const redis = new Redis({
 })
 
 export const db = {
-    upsert: async <T>({ id, data }: { id: string, data: T }) => {
+    upsert: async <T>({ id, data, options }: { id: string, data: T, options?: SetCommandOptions }) => {
         console.log(id, data)
-        await redis.set(id, JSON.stringify(data))
+        await redis.set(id, JSON.stringify(data), options)
     }
     ,
     getById: async <T>(id: string): Promise<T | null> => {
