@@ -35,7 +35,7 @@ export default async function Page({ searchParams }: { searchParams: Promise<Req
         hash.update(codeChallengeObj.code_challenge)
         storePkce(codeChallengeObj.code_challenge_method === 'S256' ? hash.digest('base64') : codeChallengeObj.code_challenge)
     }
-    storeAuth(state + (code_challenge ?? ''), { clientId: client.clientId, nonce, codeChallengeObj })
+    storeAuth(code + (code_challenge ?? ''), { clientId: client.clientId, nonce, codeChallengeObj })
     return redirect(redirectUrl + `?${redirectUrlQuery}`)
 
 }
