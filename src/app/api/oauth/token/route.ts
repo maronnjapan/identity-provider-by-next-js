@@ -4,7 +4,7 @@ import { getState } from "@/lib/services/state.service";
 import { deleteCode, generateIdToken, IdTokenPayload, validCode } from "@/lib/services/token.service";
 import { NextRequest, NextResponse } from "next/server";
 
-export const corsHeaders = {
+const corsHeaders = {
     'Access-Control-Allow-Origin': '*',
     'Access-Control-Allow-Methods': 'GET, POST, PUT, DELETE, OPTIONS', // OPTONSを追加
     'Access-Control-Allow-Headers': 'Content-Type', // 追加
