@@ -11,7 +11,7 @@ export function middleware(request: NextRequest) {
                 'Access-Control-Allow-Origin': '*',
                 'Access-Control-Allow-Methods': 'GET,HEAD,PUT,PATCH,POST,DELETE,OPTIONS',
                 'Access-Control-Max-Age': '86400',
-                'Access-Control-Allow-Headers': 'Content-Type, Authorization',
+                'Access-Control-Allow-Headers': '*',
                 'Vary': 'Access-Control-Request-Headers',
                 'Content-Length': '0',
             },
