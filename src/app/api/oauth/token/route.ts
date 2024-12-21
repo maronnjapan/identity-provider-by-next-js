@@ -83,7 +83,7 @@ export async function POST(request: NextRequest) {
     const nonceObj = auth.nonce ? { nonce: auth.nonce } : {}
 
     const idTokenPayload: IdTokenPayload = {
-        iss: apiUrl.origin,
+        iss: `${apiUrl.origin}/`,
         sub: '1234567890',
         name: 'John Doe',
         email: 'john.doe@example.com',
