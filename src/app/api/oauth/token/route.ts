@@ -11,6 +11,7 @@ export async function POST(request: NextRequest) {
     console.log(bodyText.split('&'))
     const bodyList = bodyText.split('&').map(item => item.split(/=(.+)/, 2))
     console.log(bodyList)
+
     const body = bodyList.reduce<{ code: string, code_verifier: string, client_id: string, grant_type: 'authorization_code', redirect_uri?: string }>((acc, [key, value]) => {
         return { ...acc, [key]: value }
     }, { code: '', code_verifier: '', client_id: '', grant_type: 'authorization_code', redirect_uri: '' })
@@ -20,7 +21,7 @@ export async function POST(request: NextRequest) {
     if (!code || !code_verifier) {
         return NextResponse.json({ message: 'Bad Request ' }, { status: 400 })
     }
-    const auth = getAuth(code + code_verifier)
+    const auth = await getAuth(code + code_verifier)
     console.log(auth)
     const client = getClientById(client_id)
     if (!auth || !client) {
