@@ -36,10 +36,13 @@ export async function POST(request: NextRequest) {
 
 
     const hash = createHash('sha256')
-    if (code_verifier) {
+    if (code_verifier && auth.codeChallengeObj?.code_challenge_method === 'S256') {
         hash.update(code_verifier)
     }
-    const isValidCodeVerifier = code_verifier ? await validateChallenge(hash.digest('base64')) : true;
+    const codeChallenge = auth.codeChallengeObj?.code_challenge
+    console.log(codeChallenge, 'codeChallenge')
+    console.log(hash.digest('base64'), "hash.digest('base64')")
+    const isValidCodeVerifier = code_verifier ? await validateChallenge(auth.codeChallengeObj?.code_challenge_method === 'S256' ? hash.digest('base64') : code_verifier) : true;
     const isValidCode = await validCode(code)
 
     const isValidClientId = client_id === auth.clientId

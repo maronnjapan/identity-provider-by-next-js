@@ -33,6 +33,7 @@ export default async function Page({ searchParams }: { searchParams: Promise<Req
     const codeChallengeObj = code_challenge && code_challenge_method ? { code_challenge, code_challenge_method } : undefined
 
     if (codeChallengeObj) {
+        console.log(codeChallengeObj.code_challenge, 'codeChallengeObj.code_challenge')
         storePkce(codeChallengeObj.code_challenge)
     }
     console.log(code + client.clientId)
