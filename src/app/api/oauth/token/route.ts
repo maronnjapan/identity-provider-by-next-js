@@ -19,12 +19,12 @@ export async function POST(request: NextRequest) {
     const { code, state, code_verifier, client_id, grant_type, redirect_uri } = await request.json() as { code: string, state: string, code_verifier: string, client_id: string, grant_type: 'authorization_code', redirect_uri?: string }
 
     if (!code || !state || !code_verifier) {
-        return NextResponse.json({ message: 'Bad Request' }, { status: 400 })
+        return NextResponse.json({ message: 'Bad Request' }, { status: 400, headers: corsHeaders })
     }
     const auth = getAuth(state + code_verifier)
     const client = getClientById(client_id)
     if (!auth || !client) {
-        return NextResponse.json({ message: 'Bad Request' }, { status: 400 })
+        return NextResponse.json({ message: 'Bad Request' }, { status: 400, headers: corsHeaders })
     }
 
     const isValidState = !!getState(state)
@@ -35,7 +35,7 @@ export async function POST(request: NextRequest) {
     const isValidGrantType = grant_type === 'authorization_code'
     const isValidRedirectUri = redirect_uri ? client.isAllowUrl(redirect_uri) : true
     if (!isValidState || !isValidCodeVerifier || !isValidCode || !isValidClientId || !isValidGrantType || !isValidRedirectUri) {
-        return NextResponse.json({ message: 'Bad Request' }, { status: 400 })
+        return NextResponse.json({ message: 'Bad Request' }, { status: 400, headers: corsHeaders })
     }
 
 
