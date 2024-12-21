@@ -28,7 +28,7 @@ export async function POST(request: NextRequest) {
         return NextResponse.json({ message: 'Bad Request  ' }, { status: 400 })
     }
 
-    const auth = await getAuth(code + client.clientId + code_verifier)
+    const auth = await getAuth(code + client.clientId)
     console.log(auth)
     if (!auth) {
         return NextResponse.json({ message: 'Bad Request  ' }, { status: 400 })
