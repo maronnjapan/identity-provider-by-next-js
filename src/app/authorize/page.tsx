@@ -4,6 +4,7 @@ import { redirect } from "next/navigation";
 import { createHash, randomBytes, randomUUID } from "crypto";
 import { storeAuth } from "@/lib/services/auth.service";
 import { storePkce } from "@/lib/services/pcke.service";
+import { storeCode } from "@/lib/services/token.service";
 
 
 
@@ -26,6 +27,7 @@ export default async function Page({ searchParams }: { searchParams: Promise<Req
     }
 
     const code = randomUUID()
+    await storeCode(code)
     const redirectUrlQuery = new URLSearchParams({ state, code }).toString()
     const redirectUrl = redirect_uri ?? client.allowRedirectUrls[0]
     const codeChallengeObj = code_challenge && code_challenge_method ? { code_challenge, code_challenge_method } : undefined
@@ -35,7 +37,6 @@ export default async function Page({ searchParams }: { searchParams: Promise<Req
         const hash = createHash('sha256')
         hash.update(codeChallengeObj.code_challenge)
         codeVerifier = codeChallengeObj.code_challenge_method === 'S256' ? hash.digest('base64') : codeChallengeObj.code_challenge
-        console.log(codeVerifier, 'codeVerifier')
         storePkce(codeVerifier)
     }
     await storeAuth(code + client_id + codeVerifier, { clientId: client.clientId, nonce, codeChallengeObj })

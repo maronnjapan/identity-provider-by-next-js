@@ -38,8 +38,10 @@ export async function POST(request: NextRequest) {
 
     const isValidClientId = client_id === auth.clientId
     const isValidGrantType = grant_type === 'authorization_code'
-    const isValidRedirectUri = redirect_uri ? client.isAllowUrl(redirect_uri) : true
+    const isValidRedirectUri = redirect_uri ? client.isAllowUrl(decodeURIComponent(redirect_uri)) : true
 
+    console.log(decodeURIComponent(redirect_uri ?? ''))
+    console.log(isValidCodeVerifier, isValidCode, isValidClientId, isValidGrantType, isValidRedirectUri)
     if (!isValidCodeVerifier || !isValidCode || !isValidClientId || !isValidGrantType || !isValidRedirectUri) {
         return NextResponse.json({ message: 'Bad Request   ' }, { status: 400 })
     }

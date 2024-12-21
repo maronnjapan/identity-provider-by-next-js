@@ -7,6 +7,7 @@ const redis = new Redis({
 
 export const db = {
     upsert: async <T>({ id, data }: { id: string, data: T }) => {
+        console.log(id, data)
         await redis.set(id, JSON.stringify(data))
     }
     ,
