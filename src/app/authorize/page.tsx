@@ -7,10 +7,13 @@ import { storePkce } from "@/lib/services/pcke.service";
 
 
 
-export default async function Page({ params }: { params: Promise<RequiredAuthorizeQuery & OptionalAuthorizeQuery> }) {
-    const { client_id, response_type, redirect_uri, scope, state, nonce, code_challenge, code_challenge_method, audience } = await params
+export default async function Page({ searchParams }: { searchParams: Promise<RequiredAuthorizeQuery & OptionalAuthorizeQuery> }) {
+    console.log(await searchParams)
+    const { client_id, response_type, redirect_uri, scope, state, nonce, code_challenge, code_challenge_method, audience } = await searchParams
+    console.log(client_id)
     const client = getClientById(client_id);
 
+    console.log(client)
     if (!client) {
         return <div>
             <p>不正なURLです</p>

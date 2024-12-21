@@ -19,6 +19,7 @@ export type OptionalAuthorizeQuery = {
 const requiredQueryNames: Permutation<keyof RequiredAuthorizeQuery> = ['client_id', 'response_type', 'state']
 
 export const isBadRequestQuery = (query: RequiredAuthorizeQuery & OptionalAuthorizeQuery) => {
+    console.log(query)
     const isExistRequiredQueries = requiredQueryNames.every(name => !!query[name]);
     console.log(isExistRequiredQueries)
     if (!isExistRequiredQueries) {
