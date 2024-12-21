@@ -11,8 +11,11 @@ const corsHeaders = {
     'Access-Control-Allow-Headers': '*',
 }
 
-export async function OPTIONS() {
-    return NextResponse.json({}, { headers: corsHeaders })
+export async function OPTIONS(request: NextRequest) {
+    return new NextResponse(null, {
+        status: 204,
+        headers: corsHeaders,
+    })
 }
 
 export async function POST(request: NextRequest) {
