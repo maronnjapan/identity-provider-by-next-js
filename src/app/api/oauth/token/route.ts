@@ -6,8 +6,8 @@ import { NextRequest, NextResponse } from "next/server";
 
 const corsHeaders = {
     'Access-Control-Allow-Origin': '*',
-    'Access-Control-Allow-Methods': 'GET, POST, PUT, DELETE, OPTIONS', // OPTONSを追加
-    'Access-Control-Allow-Headers': 'Content-Type', // 追加
+    'Access-Control-Allow-Methods': 'GET, POST, PUT, DELETE, OPTIONS',
+    'Access-Control-Allow-Headers': 'Content-Type',
 }
 
 export async function POST(request: NextRequest) {
