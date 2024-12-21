@@ -36,6 +36,7 @@ export const isBadRequestQuery = (query: RequiredAuthorizeQuery & OptionalAuthor
     }
 
     console.log(query.redirect_uri)
+    console.log(query.redirect_uri && !client.isAllowUrl(query.redirect_uri))
     if (query.redirect_uri && !client.isAllowUrl(query.redirect_uri)) {
         return true;
     }

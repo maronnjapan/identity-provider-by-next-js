@@ -19,13 +19,14 @@ export default async function Page({ searchParams }: { searchParams: Promise<Req
             <p>不正なURLです</p>
         </div>
     }
-    if (!isBadRequestQuery({ client_id, response_type, redirect_uri, scope, state, nonce, audience, code_challenge, code_challenge_method })) {
+    if (isBadRequestQuery({ client_id, response_type, redirect_uri, scope, state, nonce, audience, code_challenge, code_challenge_method })) {
         return <div>
             <p>不正なURLです</p>
         </div>
     }
 
     const code = randomUUID()
+    console.log(code)
     const redirectUrlQuery = new URLSearchParams({ state, code }).toString()
     const codeChallengeObj = code_challenge && code_challenge_method ? { code_challenge, code_challenge_method } : undefined
     if (codeChallengeObj) {
