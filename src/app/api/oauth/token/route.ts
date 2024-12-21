@@ -35,8 +35,28 @@ export async function POST(request: NextRequest) {
     }
 
 
-    const hash = createHash('sha256')
-    const digest = code_verifier && auth.codeChallengeObj?.code_challenge_method === 'S256' ? hash.update(code_verifier).digest('base64') : code_verifier
+    const digestBufferOrString = code_verifier && auth.codeChallengeObj?.code_challenge_method === 'S256' ?
+        await crypto.subtle.digest(
+            { name: 'SHA-256' },
+            new TextEncoder().encode(code_verifier)
+        )
+        : code_verifier
+
+    const bufferToBase64UrlEncoded = (input?: ArrayBuffer) => {
+        if (!input) {
+            return undefined
+        }
+        const ie11SafeInput = new Uint8Array(input);
+        return urlEncodeB64(
+            btoa(String.fromCharCode(...Array.from(ie11SafeInput)))
+        );
+    };
+    const urlEncodeB64 = (input: string) => {
+        const b64Chars: { [index: string]: string } = { '+': '-', '/': '_', '=': '' };
+        return input.replace(/[+/=]/g, (m: string) => b64Chars[m]);
+    };
+    const digest = typeof digestBufferOrString === 'string' ? digestBufferOrString : bufferToBase64UrlEncoded(digestBufferOrString)
+
 
     const codeChallenge = auth.codeChallengeObj?.code_challenge
     console.log(codeChallenge, 'codeChallenge')
