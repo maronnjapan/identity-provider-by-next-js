@@ -28,5 +28,5 @@ export function middleware(request: NextRequest) {
 
 // このミドルウェアを適用するパスを指定
 export const config = {
-    matcher: '/api/oauth/token',  // あなたのAPIエンドポイントのパスに合わせて変更してください
+    matcher: ['/api/oauth/token', '/oauth/token']  // あなたのAPIエンドポイントのパスに合わせて変更してください
 }
