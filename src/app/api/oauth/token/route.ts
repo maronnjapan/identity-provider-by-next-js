@@ -4,6 +4,12 @@ import { getState } from "@/lib/services/state.service";
 import { deleteCode, generateIdToken, IdTokenPayload, validCode } from "@/lib/services/token.service";
 import { NextRequest, NextResponse } from "next/server";
 
+export const corsHeaders = {
+    'Access-Control-Allow-Origin': '*',
+    'Access-Control-Allow-Methods': 'GET, POST, PUT, DELETE, OPTIONS', // OPTONSを追加
+    'Access-Control-Allow-Headers': 'Content-Type', // 追加
+}
+
 export async function POST(request: NextRequest) {
     const { code, state, code_verifier } = await request.json() as { code: string, state: string, code_verifier: string }
 
@@ -41,5 +47,5 @@ export async function POST(request: NextRequest) {
         auth_time: Date.now(),
         ...nonceObj
     }
-    return NextResponse.json({ access_token: 'opaque', expires_in: 3600, id_token: generateIdToken(idTokenPayload) }, { status: 200 })
+    return NextResponse.json({ access_token: 'opaque', expires_in: 3600, id_token: generateIdToken(idTokenPayload) }, { status: 200, headers: corsHeaders })
 }
