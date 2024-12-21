@@ -5,15 +5,18 @@ import type { NextRequest } from 'next/server'
 export function middleware(request: NextRequest) {
     // プリフライトリクエストへの対応
     if (request.method === 'OPTIONS') {
-        return new NextResponse(null, {
-            status: 200,
+        const response = new NextResponse(null, {
+            status: 204,
             headers: {
                 'Access-Control-Allow-Origin': '*',
-                'Access-Control-Allow-Methods': 'GET, POST, PUT, DELETE, OPTIONS',
-                'Access-Control-Allow-Headers': 'Content-Type, Authorization, X-Requested-With',
+                'Access-Control-Allow-Methods': 'GET,HEAD,PUT,PATCH,POST,DELETE,OPTIONS',
                 'Access-Control-Max-Age': '86400',
+                'Access-Control-Allow-Headers': 'Content-Type, Authorization',
+                'Vary': 'Access-Control-Request-Headers',
+                'Content-Length': '0',
             },
         })
+        return response
     }
 
     // 実際のリクエストのレスポンスヘッダーを設定
