@@ -28,6 +28,7 @@ export default async function Page({ searchParams }: { searchParams: Promise<Req
     const code = randomUUID()
     console.log(code)
     const redirectUrlQuery = new URLSearchParams({ state, code }).toString()
+    const redirectUrl = redirect_uri ?? client.allowRedirectUrls[0]
     const codeChallengeObj = code_challenge && code_challenge_method ? { code_challenge, code_challenge_method } : undefined
     if (codeChallengeObj) {
         const hash = createHash('sha256')
@@ -35,7 +36,8 @@ export default async function Page({ searchParams }: { searchParams: Promise<Req
         storePkce(codeChallengeObj.code_challenge_method === 'S256' ? hash.digest('base64') : codeChallengeObj.code_challenge)
     }
     storeAuth(state + (code_challenge ?? ''), { clientId: client.clientId, nonce, codeChallengeObj })
-    return redirect(redirect_uri ?? client.allowRedirectUrls[0] + `?${redirectUrlQuery}`)
+    return redirect(redirectUrl + `?${redirectUrlQuery}`)
 
 }
 
+// http://localhost:3002/authorize?client_id=d654d2fc-118b-8592-020a-f5b13c4eafbe&scope=openid+profile+email&redirect_uri=http%3A%2F%2Flocalhost%3A3000&response_type=code&response_mode=query&state=a0lXRkg2Y0VVTTI4WmxON01rMUUtMkgzUTNJRDJSN0k2Ukpady5seXNtOA%3D%3D&nonce=aGRpWWxSVW9tLkFtUkd0M09Gai5PM3JYWFVsa0d1N25tcUlpLmpsbElGRg%3D%3D&code_challenge=fdVdFVAqFW73Og2UvTQFtigm0j3ZykGCWKpnAmEK67U&code_challenge_method=S256&auth0Client=eyJuYW1lIjoiYXV0aDAtcmVhY3QiLCJ2ZXJzaW9uIjoiMi4yLjAifQ%3D%3D
