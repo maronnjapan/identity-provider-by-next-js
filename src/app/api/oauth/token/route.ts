@@ -8,7 +8,9 @@ import { NextRequest, NextResponse } from "next/server";
 
 export async function POST(request: NextRequest) {
     const bodyText = await request.text()
-    const bodyList = bodyText.split('&').map(item => item.split('='))
+    console.log(bodyText.split('&'))
+    const bodyList = bodyText.split('&').map(item => item.split(/=(.+)/, 2))
+    console.log(bodyList)
     const body = bodyList.reduce<{ code: string, code_verifier: string, client_id: string, grant_type: 'authorization_code', redirect_uri?: string }>((acc, [key, value]) => {
         return { ...acc, [key]: value }
     }, { code: '', code_verifier: '', client_id: '', grant_type: 'authorization_code', redirect_uri: '' })
