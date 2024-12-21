@@ -21,15 +21,20 @@ export async function POST(request: NextRequest) {
     if (!code || !code_verifier) {
         return NextResponse.json({ message: 'Bad Request ' }, { status: 400 })
     }
-    const auth = await getAuth(code + code_verifier)
-    console.log(auth)
+
     const client = getClientById(client_id)
-    if (!auth || !client) {
+    if (!client) {
         return NextResponse.json({ message: 'Bad Request  ' }, { status: 400 })
     }
 
-    const isValidCodeVerifier = validateChallenge(code_verifier);
-    const isValidCode = validCode(code)
+    const auth = await getAuth(code + client.clientId + code_verifier)
+    console.log(auth)
+    if (!auth) {
+        return NextResponse.json({ message: 'Bad Request  ' }, { status: 400 })
+    }
+
+    const isValidCodeVerifier = await validateChallenge(code_verifier);
+    const isValidCode = await validCode(code)
 
     const isValidClientId = client_id === auth.clientId
     const isValidGrantType = grant_type === 'authorization_code'

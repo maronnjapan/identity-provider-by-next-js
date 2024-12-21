@@ -38,7 +38,7 @@ export default async function Page({ searchParams }: { searchParams: Promise<Req
         console.log(codeVerifier, 'codeVerifier')
         storePkce(codeVerifier)
     }
-    await storeAuth(code + codeVerifier, { clientId: client.clientId, nonce, codeChallengeObj })
+    await storeAuth(code + client_id + codeVerifier, { clientId: client.clientId, nonce, codeChallengeObj })
 
     return redirect(redirectUrl + `?${redirectUrlQuery}`)
 

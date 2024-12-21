@@ -1,15 +1,15 @@
-import { createHash } from 'crypto'
+import { db } from '../db'
 
 const pkceMap = new Map<string, string>()
 
-export const storePkce = (codeVerifier: string) => {
-    pkceMap.set(codeVerifier, codeVerifier)
+export const storePkce = async (codeVerifier: string) => {
+    await db.upsert({ id: codeVerifier, data: codeVerifier })
 }
 
-export const getCodeVerifier = (codeVerifier: string) => {
-    return pkceMap.get(codeVerifier)
+export const getCodeVerifier = async (codeVerifier: string) => {
+    return await db.getById<string>(codeVerifier)
 }
 
 export const validateChallenge = async (codeVerifier: string) => {
-    return pkceMap.has(codeVerifier)
+    return !!await db.getById<string>(codeVerifier)
 }

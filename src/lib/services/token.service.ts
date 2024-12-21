@@ -1,13 +1,14 @@
 import jwt from 'jsonwebtoken'
+import { db } from '../db'
 
 const codeMap = new Map<string, { code: string, iat: Date }>()
 
-export const storeCode = (code: string) => {
-    codeMap.set(code, { code, iat: new Date() })
+export const storeCode = async (code: string) => {
+    await db.upsert({ id: code, data: { code, iat: new Date() } })
 }
 
-export const validCode = (code: string) => {
-    const codeData = codeMap.get(code)
+export const validCode = async (code: string) => {
+    const codeData = await db.getById<{ code: string, iat: Date }>(code)
     if (!codeData) {
         return false
     }
@@ -16,8 +17,8 @@ export const validCode = (code: string) => {
     return now - codeData.iat.getTime() < 60 * 5 * 1000
 }
 
-export const deleteCode = (code: string) => {
-    codeMap.delete(code)
+export const deleteCode = async (code: string) => {
+    await db.delete(code)
 }
 
 export type IdTokenPayload = {
