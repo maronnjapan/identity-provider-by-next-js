@@ -19,9 +19,7 @@ export type OptionalAuthorizeQuery = {
 const requiredQueryNames: Permutation<keyof RequiredAuthorizeQuery> = ['client_id', 'response_type', 'state']
 
 export const isBadRequestQuery = (query: RequiredAuthorizeQuery & OptionalAuthorizeQuery) => {
-    console.log(query)
     const isExistRequiredQueries = requiredQueryNames.every(name => !!query[name]);
-    console.log(isExistRequiredQueries)
     if (!isExistRequiredQueries) {
         return true;
     }
@@ -29,18 +27,14 @@ export const isBadRequestQuery = (query: RequiredAuthorizeQuery & OptionalAuthor
         return true;
     }
 
-    console.log(query.client_id)
     const client = getClientById(query.client_id)
     if (!client) {
         return true;
     }
 
-    console.log(query.redirect_uri)
-    console.log(query.redirect_uri && !client.isAllowUrl(query.redirect_uri))
     if (query.redirect_uri && !client.isAllowUrl(query.redirect_uri)) {
         return true;
     }
-
 
     return false
 }

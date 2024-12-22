@@ -37,7 +37,7 @@ export default async function Page({ searchParams }: { searchParams: Promise<Req
         storePkce(codeChallengeObj.code_challenge)
     }
     console.log(code + client.clientId)
-    await storeAuth(code + client.clientId, { clientId: client.clientId, nonce, codeChallengeObj })
+    await storeAuth(code + client.clientId, { clientId: client.clientId, isPublishIdToken: !!scope?.includes('openid') && response_type === 'code', nonce, codeChallengeObj })
 
     return redirect(redirectUrl + `?${redirectUrlQuery}`)
 
