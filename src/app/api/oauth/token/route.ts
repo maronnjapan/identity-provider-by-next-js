@@ -11,9 +11,9 @@ export async function POST(request: NextRequest) {
     const bodyText = await request.text()
     const bodyList = bodyText.split('&').map(item => item.split(/=(.+)/, 2))
 
-    const body = bodyList.reduce<{ code: string, code_verifier?: string, client_id: string, grant_type: 'authorization_code', redirect_uri?: string }>((acc, [key, value]) => {
+    const body = bodyList.reduce<{ code: string, code_verifier?: string, client_id: string, grant_type?: 'authorization_code', redirect_uri?: string }>((acc, [key, value]) => {
         return { ...acc, [key]: value }
-    }, { code: '', code_verifier: undefined, client_id: '', grant_type: 'authorization_code', redirect_uri: undefined })
+    }, { code: '', code_verifier: undefined, client_id: '', grant_type: undefined, redirect_uri: undefined })
 
     const { code, code_verifier, client_id, grant_type, redirect_uri } = body
     if (!code) {
@@ -73,7 +73,7 @@ export async function POST(request: NextRequest) {
 
     const idToken = auth.isPublishIdToken ? generateIdToken(idTokenPayload) : undefined
 
-    return NextResponse.json({ access_token: 'opaque', expires_in: 3600, id_token: idToken }, { status: 200 })
+    return NextResponse.json({ access_token: 'opaque', "token_type": "Bearer", expires_in: 3600, id_token: idToken }, { status: 200 })
 }
 
 const bufferToBase64UrlEncoded = (input?: ArrayBuffer) => {
