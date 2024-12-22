@@ -73,7 +73,7 @@ export async function POST(request: NextRequest) {
 
     const idToken = auth.isPublishIdToken ? generateIdToken(idTokenPayload) : undefined
 
-    return NextResponse.json({ access_token: 'opaque', "token_type": "Bearer", expires_in: 3600, id_token: idToken }, { status: 200 })
+    return NextResponse.json({ access_token: 'opaque', token_type: "Bearer", expires_in: 3600, id_token: idToken }, { status: 200 })
 }
 
 const bufferToBase64UrlEncoded = (input?: ArrayBuffer) => {
