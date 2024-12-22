@@ -33,7 +33,7 @@ export type IdTokenPayload = {
     iat: number,
     exp: number,
     aud: string,
-    auth_time: number,
+    auth_time?: number,
     nonce?: string
 }
 type IdTokenHeader = {

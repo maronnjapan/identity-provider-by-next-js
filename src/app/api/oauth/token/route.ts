@@ -67,7 +67,6 @@ export async function POST(request: NextRequest) {
         iat: Date.now(),
         exp: Date.now() + 3600,
         aud: auth.clientId,
-        auth_time: Date.now(),
         ...nonceObj
     }
 
