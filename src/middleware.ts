@@ -15,5 +15,5 @@ export async function middleware(request: NextRequest) {
 }
 
 export const config = {
-    matcher: '/api/oauth/token',
+    matcher: '/:path*',
 }
