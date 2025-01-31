@@ -1,5 +1,3 @@
-import { getClientById } from "@/lib/services/client.service";
-import { Permutation } from "@/utils/util-type";
 
 export type RequiredAuthorizeQuery = {
     client_id: string;
@@ -12,29 +10,6 @@ export type OptionalAuthorizeQuery = {
     audience?: string;
     redirect_uri?: string;
     nonce?: string;
-    code_challenge?: string;
-    code_challenge_method?: 'S256' | 'plain';
-}
-
-const requiredQueryNames: Permutation<keyof RequiredAuthorizeQuery> = ['client_id', 'response_type', 'state']
-
-export const isBadRequestQuery = (query: RequiredAuthorizeQuery & OptionalAuthorizeQuery) => {
-    const isExistRequiredQueries = requiredQueryNames.every(name => !!query[name]);
-    if (!isExistRequiredQueries) {
-        return true;
-    }
-    if (query.response_type !== 'code') {
-        return true;
-    }
-
-    const client = getClientById(query.client_id)
-    if (!client) {
-        return true;
-    }
-
-    if (query.redirect_uri && !client.isAllowUrl(query.redirect_uri)) {
-        return true;
-    }
-
-    return false
+    code_challenge: string;
+    code_challenge_method: 'S256' | 'plain';
 }
