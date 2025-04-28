@@ -9,6 +9,52 @@ import type {
   AxiosRequestConfig,
   AxiosResponse
 } from 'axios'
+export type GetWellKnownJwksJson200KeysItemOthItem = {
+  r?: string;
+  d?: string;
+  t?: string;
+};
+
+export type GetWellKnownJwksJson200KeysItem = {
+  kid: string;
+  kty: string;
+  use?: string;
+  key_ops?: string[];
+  alg?: string;
+  n?: string;
+  e?: string;
+  d?: string;
+  p?: string;
+  q?: string;
+  dp?: string;
+  dq?: string;
+  qi?: string;
+  oth?: GetWellKnownJwksJson200KeysItemOthItem[];
+  crv?: string;
+  x?: string;
+  y?: string;
+  ext?: boolean;
+  k?: string;
+};
+
+export type GetWellKnownJwksJson200 = {
+  keys: GetWellKnownJwksJson200KeysItem[];
+};
+
+export type PostLogin200 = {
+  userId: string;
+};
+
+export type PostLoginBody = {
+  /** ユーザーのメールアドレス */
+  email: string;
+  /**
+   * ユーザーのパスワード
+   * @minLength 6
+   */
+  password: string;
+};
+
 export type PostAuthorize200 = {
   /** CSRF対策 */
   state: string;
@@ -122,7 +168,7 @@ export type PostOauthTokenBody = {
     postOauthTokenBody: PostOauthTokenBody, options?: AxiosRequestConfig
  ): Promise<TData> => {
     return axios.post(
-      `https://openid-provider-api-by-hono.tihoutaikai20.workers.dev/oauth/token`,
+      `http://localhost:8787/oauth/token`,
       postOauthTokenBody,options
     );
   }
@@ -131,10 +177,29 @@ export const postAuthorize = <TData = AxiosResponse<PostAuthorize200>>(
     postAuthorizeBody: PostAuthorizeBody, options?: AxiosRequestConfig
  ): Promise<TData> => {
     return axios.post(
-      `https://openid-provider-api-by-hono.tihoutaikai20.workers.dev/authorize`,
+      `http://localhost:8787/authorize`,
       postAuthorizeBody,options
+    );
+  }
+
+export const postLogin = <TData = AxiosResponse<PostLogin200>>(
+    postLoginBody: PostLoginBody, options?: AxiosRequestConfig
+ ): Promise<TData> => {
+    return axios.post(
+      `http://localhost:8787/login`,
+      postLoginBody,options
+    );
+  }
+
+export const getWellKnownJwksJson = <TData = AxiosResponse<GetWellKnownJwksJson200>>(
+     options?: AxiosRequestConfig
+ ): Promise<TData> => {
+    return axios.get(
+      `http://localhost:8787/.well-known/jwks.json`,options
     );
   }
 
 export type PostOauthTokenResult = AxiosResponse<PostOauthToken201>
 export type PostAuthorizeResult = AxiosResponse<PostAuthorize200>
+export type PostLoginResult = AxiosResponse<PostLogin200>
+export type GetWellKnownJwksJsonResult = AxiosResponse<GetWellKnownJwksJson200>

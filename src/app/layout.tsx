@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import localFont from "next/font/local";
 import "./globals.css";
+import axios from "axios";
 
 const geistSans = localFont({
   src: "./fonts/GeistVF.woff",
@@ -25,6 +26,9 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="en">
+      <head>
+        <meta httpEquiv="origin-trial" content="AtO+d1uaV9d1cMheOCCj2jnH4FIoGYEYVK+eh4oBl/3cUAvR/vrTlWUag2WiUUdNC7uhWt+tWfBnTpvNUXeayA4AAAB+eyJvcmlnaW4iOiJodHRwczovL2lkZW50aXR5LXByb3ZpZGVyLWJ5LW5leHQtanMudmVyY2VsLmFwcDo0NDMiLCJmZWF0dXJlIjoiRGV2aWNlQm91bmRTZXNzaW9uQ3JlZGVudGlhbHMiLCJleHBpcnkiOjE3NjA0MDAwMDB9" />
+      </head>
       <body className={`${geistSans.variable} ${geistMono.variable}`}>
         {children}
       </body>

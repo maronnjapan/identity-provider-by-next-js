@@ -1,7 +1,20 @@
+'use client'
 import Image from "next/image";
 import styles from "./page.module.css";
+import { useEffect } from "react";
 
 export default function Home() {
+
+  useEffect(() => {
+    fetch('/api/dbsc', {
+      headers: {
+        "Origin-Trial": "AtO+d1uaV9d1cMheOCCj2jnH4FIoGYEYVK+eh4oBl/3cUAvR/vrTlWUag2WiUUdNC7uhWt+tWfBnTpvNUXeayA4AAAB+eyJvcmlnaW4iOiJodHRwczovL2lkZW50aXR5LXByb3ZpZGVyLWJ5LW5leHQtanMudmVyY2VsLmFwcDo0NDMiLCJmZWF0dXJlIjoiRGV2aWNlQm91bmRTZXNzaW9uQ3JlZGVudGlhbHMiLCJleHBpcnkiOjE3NjA0MDAwMDB9",
+        "Sec-Session-Registration": '(ES256 RS256); path="/api/dbsc-check"',
+      }
+    }).then((res) => {
+      console.log(res)
+    })
+  }, [])
   return (
     <div className={styles.page}>
       <main className={styles.main}>
