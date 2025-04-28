@@ -1,7 +1,5 @@
 'use client';
 
-import { PublicKeyCredentialRequestOptionsInAPI } from "@/app/api/login/route";
-import { PublicKeyCredentialCreationOptionsInAPI } from "@/app/api/register/route";
 import { pagesPath } from "@/router/$path";
 import styles from "./LoginForm.module.css";
 
@@ -9,7 +7,7 @@ export function LoginForm() {
 
     const login = async () => {
         const res = await fetch('/api/login', { method: 'GET' })
-        const data: PublicKeyCredentialRequestOptionsInAPI = await res.json()
+        const data = await res.json()
         const publicKeyOptions: PublicKeyCredentialRequestOptions = {
             ...data,
             challenge: new TextEncoder().encode(data.challenge),
