@@ -1,6 +1,5 @@
 'use client';
 
-import { PublicKeyCredentialCreationOptionsInAPI } from "@/app/api/register/route";
 import { useState } from "react";
 
 export function RegisterForm() {
@@ -10,7 +9,7 @@ export function RegisterForm() {
 
     const createKey = async () => {
         const res = await fetch('/api/register', { method: 'GET' })
-        const data: PublicKeyCredentialCreationOptionsInAPI = await res.json()
+        const data = await res.json()
 
         const publicKeyOptions: PublicKeyCredentialCreationOptions = {
             ...data,
